@@ -5,6 +5,7 @@ import { assets } from '../assets/assets'
 import { ShopContext } from '../context/ShopContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { currency } from '../../../admin/src/App'
 
 const PlaceOrder = () => {
 
@@ -27,6 +28,48 @@ const PlaceOrder = () => {
     const value = event.target.value
     setFormData(data => ({ ...data, [name]: value }))
 
+  }
+
+  const initPay = (order) => {
+    if (!window.Razorpay) {
+      toast.error('Razorpay SDK not loaded. Check your internet and refresh the page.')
+      console.error('Razorpay SDK missing on window')
+      return
+    }
+
+    const option = {
+
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'Order Payment',
+      description: 'Order Payment',
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (response) => {
+        console.log('Razorpay payment handler response', response)
+        try {
+          const verifyBody = {
+            userId: getUserIdFromToken(),
+            razorpay_order_id: response.razorpay_order_id || response.order_id
+          }
+          const { data } = await axios.post(backendUrl + '/api/order/verifyRazorpay', verifyBody, { headers: { token } })
+          if (data.success) {
+            setCartItems({})
+            navigate('/orders')
+          } else {
+            toast.error(data.message || 'Razorpay verification failed')
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error)
+
+        }
+
+      }
+    }
+    const rzp = new window.Razorpay(option)
+    rzp.open()
   }
 
   const getUserIdFromToken = () => {
@@ -82,20 +125,31 @@ const PlaceOrder = () => {
           break;
         case 'stripe':
           const responseStripe = await axios.post(backendUrl + '/api/order/stripe', orderData, { headers: { token } })
-          if(responseStripe.data.success){
-            const {success_url}=responseStripe.data
+          if (responseStripe.data.success) {
+            const { success_url } = responseStripe.data
             window.location.replace(success_url)
           }
-          else{
+          else {
             toast.error(responseStripe.data.message)
           }
           break;
+        case 'razorpay':
+          const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, { headers: { token } })
+          if (responseRazorpay.data.success) {
+            initPay(responseRazorpay.data.order);
+
+          }
+          else {
+            toast.error(responseRazorpay.data.message)
+          }
+          break
 
         default:
-          break
+          break;
       }
 
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
       toast.error(error.message);
     }
