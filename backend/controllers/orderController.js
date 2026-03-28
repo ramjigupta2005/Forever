@@ -1,7 +1,6 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js"
 import Stripe from "stripe";
-import razorpay from "razorpay"
 import Razorpay from "razorpay";
 
 //global variables
@@ -108,7 +107,7 @@ const verifyStripe = async (req, res) => {
             res.json({ success: true })
         }
         else {
-            await userModel.findByIdAndDelete(orderId)
+            await orderModel.findByIdAndDelete(orderId)
             res.json({ success: false })
         }
 
