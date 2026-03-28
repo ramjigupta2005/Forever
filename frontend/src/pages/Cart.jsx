@@ -10,6 +10,7 @@ const Cart = () => {
   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
 
+
   useEffect(() => {
 
     if (products.length > 0) {
@@ -25,7 +26,7 @@ const Cart = () => {
           }
         }
       }
-
+     
       setCartData(tempData);
     }
   }, [cartItems, products])

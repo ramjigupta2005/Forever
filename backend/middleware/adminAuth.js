@@ -8,7 +8,8 @@ const adminAuth=(req,res,next)=>{
             return res.json({success:false,message:"Not Authorised Login Again"})
         }
         const decodeToken=jwt.verify(token,process.env.JWT_SECRET)
-        if(decodeToken!==process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD){
+        
+        if(decodeToken.email!==process.env.ADMIN_EMAIL){
             return res.json({success:false,message:"Not Authorised Login Again"})
         }
         next()
