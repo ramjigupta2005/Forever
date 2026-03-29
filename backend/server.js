@@ -15,8 +15,15 @@ connectDB()
 connectCloudinary()
 
 //middleware
+app.use(cors({
+    origin: ["http://localhost:5173", "http://localhost:5174", "https://forever-frontend-sandy-tau.vercel.app", "https://forever-admin-six-theta.vercel.app"],
+    credentials: true, 
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
+}));
 app.use(express.json())
-app.use(cors())
+
+    
 
 //api endpoint
 app.use('/api/user',userRouter)
