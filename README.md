@@ -23,9 +23,9 @@ This project demonstrates practical implementation of **full-stack development, 
 
 | Service           | Link                                           |
 | ----------------- | ---------------------------------------------- |
-| 🧑‍💻 Admin Panel | https://forever-admin-six-theta.vercel.app/    |
-| 🛒 Frontend       | https://forever-frontend-sandy-tau.vercel.app/ |
-| ⚙️ Backend API    | https://forever-backend-rho-cyan.vercel.app/   |
+| 🧑‍💻 Admin Panel |https://forever-adminbase.vercel.app/   |
+| 🛒 Frontend       | https://forever-frontendbase.vercel.app/ |
+| ⚙️ Backend API    | https://forever-hmxf.onrender.com/  |
 
 ---
 
