@@ -5,6 +5,7 @@ import { assets } from '../assets/assets'
 import { ShopContext } from '../context/ShopContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { getUserIdFromToken } from '../utils/auth'
 
 
 const PlaceOrder = () => {
@@ -50,7 +51,7 @@ const PlaceOrder = () => {
         console.log('Razorpay payment handler response', response)
         try {
           const verifyBody = {
-            userId: getUserIdFromToken(),
+            userId: getUserIdFromToken(token),
             razorpay_order_id: response.razorpay_order_id || response.order_id
           }
           const { data } = await axios.post(backendUrl + '/api/order/verifyRazorpay', verifyBody, { headers: { token } })
@@ -72,20 +73,10 @@ const PlaceOrder = () => {
     rzp.open()
   }
 
-  const getUserIdFromToken = () => {
-    if (!token) return null
-    try {
-      const payload = token.split('.')[1]
-      const decoded = JSON.parse(atob(payload))
-      return decoded.id || decoded.userId || null
-    } catch (err) {
-      return null
-    }
-  }
-
   const onSubmitHandler = async (event) => {
     event.preventDefault()
     try {
+      const userId = getUserIdFromToken(token)
       let orderItems = []
       for (const items in cartItems) {
         for (const item in cartItems[items]) {
@@ -106,7 +97,7 @@ const PlaceOrder = () => {
       }
 
       let orderData = {
-        userId: getUserIdFromToken(),
+        userId,
         address: formData,
         items: orderItems,
         amount: getCartAmount() + delivery_fee

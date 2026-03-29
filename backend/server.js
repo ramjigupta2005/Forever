@@ -16,15 +16,14 @@ connectCloudinary()
 
 //middleware
 app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5174", "https://forever-frontend-sandy-tau.vercel.app", "https://forever-admin-six-theta.vercel.app"],
-    credentials: true, 
+    origin: "*",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "token"]
 }));
 app.use(express.json())
 
     
-
+    
 //api endpoint
 app.use('/api/user',userRouter)
 app.use('/api/product',productRouter)

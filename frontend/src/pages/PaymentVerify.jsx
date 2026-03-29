@@ -3,6 +3,7 @@ import { ShopContext } from '../context/ShopContext'
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { getUserIdFromToken } from '../utils/auth';
 
 const PaymentVerify = () => {
   const { navigate, token, setCartItems, backendUrl } = useContext(ShopContext);
@@ -27,7 +28,7 @@ const PaymentVerify = () => {
 
       const response = await axios.post(
         backendUrl + '/api/order/verifyStripe',
-        { success, orderId },
+        { userId: getUserIdFromToken(authToken), success, orderId },
         { headers: { token: authToken } }
       )
 
