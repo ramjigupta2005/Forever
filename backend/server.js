@@ -9,23 +9,30 @@ import cartRouter from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
 
 //App config
-const app=express()
-const port=process.env.PORT ||4000
+const app = express()
+const port = process.env.PORT || 4000
 connectDB()
 connectCloudinary()
 
 //middleware
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: [
+        "https://forever-frontend-sandy-tau.vercel.app",
+        "https://forever-admin-six-theta.vercel.app"
+    ]
+}))
+
+app.options('*', cors())
 
 //api endpoint
-app.use('/api/user',userRouter)
-app.use('/api/product',productRouter)
-app.use('/api/cart',cartRouter)
-app.use('/api/order',orderRouter)
+app.use('/api/user', userRouter)
+app.use('/api/product', productRouter)
+app.use('/api/cart', cartRouter)
+app.use('/api/order', orderRouter)
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
     res.send('API working')
 })
 
-app.listen(port,()=>console.log('Server started on PORT :'+ port))
+app.listen(port, () => console.log('Server started on PORT :' + port))
